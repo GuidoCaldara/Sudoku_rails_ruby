@@ -1,0 +1,181 @@
+<style>
+
+body{
+  font-size: 20px
+}
+  .row {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    display: flex;
+    width: auto;
+    max-width: 450px;
+    max-height: 450px
+  }
+
+  .one{
+    border-top: 1px solid black
+  }
+
+  .three {
+    border-bottom: 5px solid black
+  }
+
+  .six {
+    border-bottom: 5px solid black
+  }
+
+  .cell {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black
+  }
+
+  .cell:hover{
+    cursor: pointer;
+  }
+
+  .cell-border{
+    border-right: 5px solid black
+  }
+
+  .number-cell{
+    width: 70px;
+    height: 40px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .number-cell:hover{
+    cursor: pointer;
+  }
+  .numbers-row{
+    width: 210px;
+    height: 40px;
+    display: flex
+  }
+  .number-container{
+    position: absolute;
+    top: 0px;
+    background-color: white
+  }
+
+</style>
+<%= @numbers %>
+<% row = ["one","two","three","four","five","six","seven","eight","nine"] %>
+<!-- <% condition = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false] %> -->
+<% condition = [ true, true, true, false]   %>
+<% cell = 1 %>
+<div class="container">
+  <% @numbers.each_with_index do |array, index| %>
+    <div class="row <%= row[index] %>">
+      <% array.each_with_index do |number, index| %>
+      <% if( index == 2 || index == 5) %>
+      <div data-name = "<%= cell %>" class="cell cell-border ">
+        <% cell += 1 %>
+        <%= number if condition.sample %>
+      </div>
+      <% else %>
+      <div data-name = "<%= cell %>" class="cell">
+        <% cell += 1 %>
+        <%= number if condition.sample %>
+      </div>
+      <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<div class="number-container" style="display:none">
+  <div class="numbers-row">
+    <div class="number-cell" data-value = "1">1</div>
+    <div class="number-cell" data-value = "2">2</div>
+    <div class="number-cell" data-value = "3">3</div>
+  </div>
+  <div class="numbers-row">
+    <div class="number-cell" data-value = "4">4</div>
+    <div class="number-cell" data-value = "5">5</div>
+    <div class="number-cell" data-value = "6">6</div>
+  </div>
+  <div class="numbers-row">
+    <div class="number-cell" data-value = "7">7</div>
+    <div class="number-cell" data-value = "8">8</div>
+    <div class="number-cell" data-value = "9">9</div>
+  </div>
+</div>
+</div>
+
+<button type="button" id ="submit" name="button"> TEST</button>
+
+<script type="text/javascript">
+  let solution = "<%= @numbers.join  %>"
+  let cells = document.querySelectorAll(".cell")
+  let smallTable = document.querySelector(".number-container")
+  let numberCells = document.querySelectorAll(".number-cell")
+
+  cells.forEach(function(cell){
+    if (cell.innerText == ""){
+    cell.addEventListener("click", function(){
+      if (smallTable.style.display == "none"){
+        bodyRect = document.body.getBoundingClientRect(),
+        elemRect = cell.getBoundingClientRect(),
+        smallTable.style.display = "block"
+        smallTable.style.top = elemRect.y + "px"
+        smallTable.style.left = (elemRect.x + 50 )+ "px"
+        smallTable.dataset.value = cell.dataset.name
+        numberCells.forEach(function(numberCell){
+          numberCell.addEventListener("click", function(){
+            cells.forEach(function(newcell){
+              console.log(newcell.dataset.value);
+              if (newcell.dataset.name == smallTable.dataset.value){
+                newcell.innerText = numberCell.dataset.value
+                newcell.style.color = "grey"
+                newcell.style.backgroundColor = "#bdf8f9"
+              }
+            })
+          })
+        })
+      } else {
+        smallTable.style.display = "none"
+        cells.forEach(function(cell){
+          cell.style.backgroundColor = "bdf8f9"
+        })
+      }
+    })
+  } else {
+    cell.style.backgroundColor = "white"
+  }
+  })
+
+
+  document.querySelector(".container").addEventListener("click", function(){
+    if (smallTable.style.display != "none"){
+      smallTable.style.display = "block"
+    }
+  })
+
+  smallTable.addEventListener("click", function(){
+    if (smallTable.style.display = "block"){
+      smallTable.style.display = "none"
+    }
+  })
+
+  let submit = document.querySelector("#submit")
+  submit.addEventListener("click", function(){
+    let attemp = ""
+    cells.forEach(function(element){
+      console.log(attemp);
+      console.log(element.innerText);
+      attemp += element.innerText
+    })
+    if (attemp == solution){
+      alert("You win")
+    } else {
+      alert("You Looooooose")
+    }
+  })
+
+
+</script>
